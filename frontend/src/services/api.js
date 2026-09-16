@@ -1,4 +1,7 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// In development, use the local backend port. In production (Docker/Render), use relative paths.
+const API_BASE = import.meta.env.DEV 
+  ? 'http://localhost:8000' 
+  : (import.meta.env.VITE_API_URL || '');
 
 /**
  * Fetch authoritative menu with real-time available stock

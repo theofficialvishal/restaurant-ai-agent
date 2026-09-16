@@ -1,11 +1,16 @@
+import os
 from typing import Optional
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.config import CORS_ORIGINS, LLM_MODEL
 from backend.app.schemas import ChatRequest, ChatResponse, ResetRequest, ResetResponse
 from backend.app.store import session_store
 from backend.graph.workflow import restaurant_graph
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+FRONTEND_DIST = os.path.join(BASE_DIR, "frontend", "dist")
 
 app = FastAPI(
     title="Desi Dhaba AI Restaurant API",
@@ -23,7 +28,7 @@ app.add_middleware(
 )
 
 
-@app.get("/")
+@app.get("/api")
 async def root():
     return {
         "name": "Desi Dhaba AI Restaurant API",
@@ -106,6 +111,32 @@ async def reset_endpoint(request: Optional[ResetRequest] = None):
     )
 
 
+
+
+# Mount static assets (React Vite build outputs CSS/JS to dist/assets)
+if os.path.exists(os.path.join(FRONTEND_DIST, "assets")):
+    app.mount("/assets", StaticFiles(directory=os.path.join(FRONTEND_DIST, "assets")), name="assets")
+
+# Catch-all route to serve the React application and other static files
+@app.get("/{full_path:path}")
+async def serve_react_app(full_path: str):
+    # Don't intercept API routes
+    if full_path.startswith("api/"):
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="API route not found")
+        
+    # Check if the requested path is a real file in the dist directory (e.g. favicon.ico, images)
+    file_path = os.path.join(FRONTEND_DIST, full_path)
+    if os.path.isfile(file_path):
+        return FileResponse(file_path)
+        
+    # Otherwise, return index.html for client-side routing
+    index_path = os.path.join(FRONTEND_DIST, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    
+    # If frontend is not built, return a simple message
+    return {"message": "Frontend not built yet. Please run 'npm run build' in the frontend directory."}
 
 
 if __name__ == "__main__":

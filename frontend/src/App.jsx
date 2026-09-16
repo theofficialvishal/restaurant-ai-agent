@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import MenuSidebar from './components/MenuSidebar';
 import OrderStatus from './components/OrderStatus';
 import ChatTimeline from './components/ChatTimeline';
 import ChatComposer from './components/ChatComposer';
 import BillModal from './components/BillModal';
+import LandingPage from './components/LandingPage';
 import { fetchMenu, sendChatMessage, resetSession, checkHealth } from './services/api';
 
 const DEFAULT_GREETING = {
@@ -162,8 +164,8 @@ export default function App() {
     handleSendMessage(`I want ${qty} plate${qty > 1 ? 's' : ''} of ${dish.name}`);
   };
 
-  return (
-    <div className="min-h-screen bg-dhaba-bg text-dhaba-cream flex flex-col selection:bg-dhaba-accent selection:text-white font-sans">
+  const OrderInterface = () => (
+    <div className="min-h-screen bg-dhaba-bg text-dhaba-cream flex flex-col selection:bg-dhaba-accent selection:text-white font-sans animate-in fade-in duration-300">
       {/* Top Header */}
       <Header
         onReset={handleReset}
@@ -208,9 +210,16 @@ export default function App() {
       />
 
       {/* Footer */}
-      <footer className="border-t border-dhaba-border bg-dhaba-surface/50 py-4 text-center text-xs text-dhaba-muted">
+      <footer className="border-t border-dhaba-border bg-dhaba-surface/50 py-4 text-center text-xs text-dhaba-muted font-serif">
         Desi Dhaba AI Restaurant • Full Stack LangGraph & FastAPI Integration
       </footer>
     </div>
+  );
+
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/order" element={<OrderInterface />} />
+    </Routes>
   );
 }

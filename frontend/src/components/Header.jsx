@@ -1,12 +1,17 @@
 import React from 'react';
 import { Utensils, RotateCcw, Sparkles, ChefHat, Receipt } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header({ onReset, onToggleBill, hasBill, isConnected = true }) {
+  const navigate = useNavigate();
   return (
     <header className="sticky top-0 z-40 border-b border-dhaba-border bg-dhaba-surface/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
         {/* Logo and Dhaba Branding */}
-        <div className="flex items-center gap-3.5">
+        <div 
+          className="flex items-center gap-3.5 cursor-pointer group"
+          onClick={() => navigate('/')}
+        >
           <div className="relative">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-dhaba-accent via-orange-600 to-amber-600 flex items-center justify-center shadow-lg shadow-dhaba-accent/20 ring-1 ring-white/10">
               <ChefHat className="w-6 h-6 text-white" />

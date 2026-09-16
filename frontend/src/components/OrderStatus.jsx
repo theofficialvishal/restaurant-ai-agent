@@ -71,21 +71,21 @@ export default function OrderStatus({ workflowStatus = 'IDLE', servingRetries = 
 
   return (
     <div className="bg-dhaba-surface border border-dhaba-border rounded-3xl p-5 shadow-lg">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-dhaba-accent animate-ping" />
-          <h3 className="text-sm font-bold tracking-tight text-dhaba-cream uppercase">
-            Order Status Stepper
-          </h3>
-        </div>
-
-        <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-dhaba-card text-dhaba-accent border border-dhaba-border">
-          {workflowStatus}
-        </span>
+      <div className="text-center mb-8 mt-2">
+        <h2 className="text-2xl font-bold font-serif text-dhaba-cream mb-2">
+          Your Order is in Progress
+        </h2>
+        <p className="text-sm text-dhaba-muted">
+          Sit back and relax while we prepare your delicious food!
+        </p>
       </div>
 
       {/* Stepper Steps */}
       <div className="grid grid-cols-5 gap-2 relative">
+        {/* Connecting Line */}
+        <div className="absolute top-5 left-1/10 right-1/10 h-[2px] bg-dhaba-border -z-0">
+           <div className="h-full bg-dhaba-accent transition-all duration-500" style={{ width: `${(currentIndex / 4) * 100}%` }}></div>
+        </div>
         {STEPS.map((step, idx) => {
           const Icon = step.icon;
           const isDone = currentIndex > idx || (currentIndex === 4 && idx === 4);
@@ -95,16 +95,16 @@ export default function OrderStatus({ workflowStatus = 'IDLE', servingRetries = 
           return (
             <div key={step.id} className="flex flex-col items-center text-center group">
               <div
-                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl flex items-center justify-center transition-all duration-300 mb-2 ${
+                className={`relative z-10 w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all duration-300 mb-3 ${
                   isDone
-                    ? 'bg-dhaba-accent text-white shadow-md shadow-dhaba-accent/30'
+                    ? 'bg-dhaba-accent text-white shadow-lg shadow-dhaba-accent/30'
                     : isCurrent
-                    ? 'bg-gradient-to-br from-dhaba-accent to-amber-500 text-white ring-4 ring-dhaba-accent/20 animate-pulse'
-                    : 'bg-dhaba-card text-dhaba-muted border border-dhaba-border'
+                    ? 'bg-dhaba-card text-dhaba-accent border-2 border-dhaba-accent animate-pulse'
+                    : 'bg-dhaba-bg text-dhaba-muted border-2 border-dhaba-border'
                 }`}
               >
                 {isDone ? (
-                  <Check className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 stroke-[3]" />
                 ) : (
                   <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 )}
@@ -122,8 +122,23 @@ export default function OrderStatus({ workflowStatus = 'IDLE', servingRetries = 
         })}
       </div>
 
+      {/* Chef Illustration Card for Cooking */}
+      {(currentIndex === 2 || currentIndex === 3) && (
+        <div className="mt-8 flex items-center gap-6 bg-dhaba-bg/50 rounded-2xl p-4 border border-dhaba-border relative overflow-hidden">
+           <img 
+              src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=400&auto=format&fit=crop" 
+              alt="Chef Cooking" 
+              className="w-24 h-24 object-cover rounded-xl"
+           />
+           <div>
+              <h4 className="text-lg font-bold font-serif text-dhaba-cream mb-1">Our chef is preparing your meal...</h4>
+              <p className="text-sm text-dhaba-muted">This may take a few minutes.<br/>Good food takes time! 😋</p>
+           </div>
+        </div>
+      )}
+
       {/* Dynamic Status Alert Banner */}
-      {getStatusBanner() && <div className="mt-4 pt-3 border-t border-dhaba-border/60">{getStatusBanner()}</div>}
+      {getStatusBanner() && <div className="mt-6 pt-4 border-t border-dhaba-border/60">{getStatusBanner()}</div>}
     </div>
   );
 }
