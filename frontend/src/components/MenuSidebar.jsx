@@ -3,6 +3,15 @@ import { Flame, Search, Plus, Sparkles, AlertCircle } from 'lucide-react';
 
 const CATEGORIES = ['All', 'Curry', 'Starter', 'Rice', 'Bread', 'Dessert'];
 
+const DISH_IMAGES = {
+  'butter-chicken': '/images/butter-chicken.png',
+  'paneer-tikka': '/images/paneer-tikka.png',
+  'hyderabadi-biryani': '/images/hyderabadi-biryani.png',
+  'dal-makhani': '/images/dal-makhani.png',
+  'garlic-naan': '/images/garlic-naan.png',
+  'gulab-jamun': '/images/gulab-jamun.png',
+};
+
 export default function MenuSidebar({ menuItems = [], onSelectDish }) {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,12 +63,12 @@ export default function MenuSidebar({ menuItems = [], onSelectDish }) {
       <div className="p-5 border-b border-dhaba-border bg-dhaba-card/40">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h2 className="text-lg font-bold text-dhaba-cream flex items-center gap-2">
-              <span>Authentic Dhaba Menu</span>
+            <h2 className="text-xl font-bold font-serif text-dhaba-cream flex items-center gap-2">
+              <span>Our Menu</span>
             </h2>
-            <p className="text-xs text-dhaba-muted">Real-time inventory from Dhaba kitchen</p>
+            <p className="text-xs text-dhaba-muted">Authentic Indian flavours, now just a chat away.</p>
           </div>
-          <span className="text-xs px-2.5 py-1 rounded-full bg-dhaba-card text-dhaba-accent border border-dhaba-border font-mono font-semibold">
+          <span className="text-xs px-2.5 py-1 rounded-full bg-dhaba-card text-dhaba-accent border border-dhaba-border font-mono font-semibold whitespace-nowrap shrink-0">
             {menuItems.length} Dishes
           </span>
         </div>
@@ -77,7 +86,7 @@ export default function MenuSidebar({ menuItems = [], onSelectDish }) {
         </div>
 
         {/* Category Pills */}
-        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex flex-wrap gap-1.5">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
@@ -113,13 +122,18 @@ export default function MenuSidebar({ menuItems = [], onSelectDish }) {
                     : 'bg-dhaba-card/60 hover:bg-dhaba-card border-dhaba-border hover:border-dhaba-accent/40 shadow-sm hover:shadow-md'
                 }`}
               >
-                <div className="flex items-start justify-between gap-2 mb-1.5">
+                <div className="relative h-40 w-full mb-3 rounded-xl overflow-hidden bg-dhaba-bg">
+                  <img src={DISH_IMAGES[dish.id] || DISH_IMAGES['butter-chicken']} alt={dish.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-dhaba-bg via-transparent to-transparent opacity-80" />
+                </div>
+
+                <div className="flex items-start justify-between gap-2 mb-1.5 px-1">
                   <div>
-                    <h3 className="text-sm font-bold text-dhaba-cream group-hover:text-dhaba-accent transition-colors">
+                    <h3 className="text-sm font-bold text-dhaba-cream group-hover:text-dhaba-accent transition-colors font-serif text-lg">
                       {dish.name}
                     </h3>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs font-mono font-bold text-amber-400">
+                      <span className="text-sm font-mono font-bold text-dhaba-cream">
                         ₹{dish.price}
                       </span>
                       {getSpiceBadge(dish.spice_level)}
@@ -133,7 +147,7 @@ export default function MenuSidebar({ menuItems = [], onSelectDish }) {
                         Sold Out
                       </span>
                     ) : (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-dhaba-accent/15 text-dhaba-accent border border-dhaba-accent/30 font-mono">
+                      <span className="text-[11px] font-semibold text-dhaba-success font-mono">
                         {dish.available_qty} left
                       </span>
                     )}
@@ -172,7 +186,7 @@ export default function MenuSidebar({ menuItems = [], onSelectDish }) {
                     }`}
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>Order</span>
+                    <span>Add</span>
                   </button>
                 </div>
               </div>
